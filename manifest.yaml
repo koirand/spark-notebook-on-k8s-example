@@ -47,14 +47,13 @@ metadata:
   name: jupyter-svc
   namespace: spark-example
 spec:
+  type: ClusterIP
   clusterIP: None
+  selector:
+    app: jupyter
   ports:
     - name: default
       port: 8888
       protocol: TCP
       targetPort: 8888
-  selector:
-  selector:
-    app: jupyter
-  type: ClusterIP
 
