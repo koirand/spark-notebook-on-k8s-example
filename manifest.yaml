@@ -1,19 +1,19 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: spark-example
+  name: spark-ns
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: spark-sa
-  namespace: spark-example
+  namespace: spark-ns
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: spark-rb
-  namespace: spark-example
+  namespace: spark-ns
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -21,12 +21,13 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: spark-sa
+    namespace: spark-ns
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: jupyter-dp
-  namespace: spark-example
+  namespace: spark-ns
 spec:
   replicas: 1
   selector:
@@ -37,6 +38,7 @@ spec:
       labels:
         app: jupyter
     spec:
+      serviceAccountName: spark-sa
       containers:
         - name: jupyter
           image: jupyter/pyspark-notebook:63d0df23b673
@@ -45,7 +47,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: jupyter-svc
-  namespace: spark-example
+  namespace: spark-ns
 spec:
   type: ClusterIP
   clusterIP: None
@@ -56,4 +58,3 @@ spec:
       port: 8888
       protocol: TCP
       targetPort: 8888
-
