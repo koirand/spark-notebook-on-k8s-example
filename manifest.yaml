@@ -23,25 +23,18 @@ subjects:
     name: spark-sa
     namespace: spark-ns
 ---
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Pod
 metadata:
-  name: jupyter-dp
+  name: jupyter
   namespace: spark-ns
+  labels:
+    app: jupyter
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: jupyter
-  template:
-    metadata:
-      labels:
-        app: jupyter
-    spec:
-      serviceAccountName: spark-sa
-      containers:
-        - name: jupyter
-          image: jupyter/pyspark-notebook:63d0df23b673
+  serviceAccountName: spark-sa
+  containers:
+    - name: jupyter
+      image: jupyter/pyspark-notebook:63d0df23b673
 ---
 apiVersion: v1
 kind: Service
